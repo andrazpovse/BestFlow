@@ -1,21 +1,27 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0-alpine AS build
-WORKDIR /
+WORKDIR /src
 
+# Copy projects
+COPY BestFlow.Api/BestFlow.Api.csproj BestFlow.Api/
+COPY BestFlow.Library/BestFlow.Library.csproj BestFlow.Library/
 
-COPY BestFlow ./src
-RUN cd src && dotnet publish "BestFlow.csproj" -c Release -o /app
+# Restore
+RUN dotnet restore BestFlow.Api/BestFlow.Api.csproj
 
-# Cleanup image
-RUN rm -r /src
+# Copy source code
+COPY BestFlow.Api/ BestFlow.Api/
+COPY BestFlow.Library/ BestFlow.Library/
+
+# Publish
+RUN dotnet publish BestFlow.Api/BestFlow.Api.csproj -c Release -o /app
 
 # Runtime
 FROM mcr.microsoft.com/dotnet/aspnet:8.0-alpine AS final
 WORKDIR /app
 
-# Copy from build
 COPY --from=build /app .
 
 ENV ASPNETCORE_URLS=http://+:80
 EXPOSE 80
 
-ENTRYPOINT ["dotnet", "BestFlow.dll"]
+ENTRYPOINT ["dotnet", "BestFlow.Api.dll"]

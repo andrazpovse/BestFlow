@@ -5,8 +5,14 @@ The code works on multiple venues, each venue has its own balance in EUR and BTC
 We construct a list of venues, where each venue tracks its own best bid/ask. We then iterate
 over venues, to find the best bid/ask across all venues and make the trade.
 
-# Test the API
+# Console
+Usage:
+Sell 1 BTC `BestFlow.Console.exe Sell 1`
+Buy 1 BTC `BestFlow.Console.exe Buy 1`
+
+# API
 Easiest way to test the API is through Docker container.
 `docker build . -t bestflow`
 `docker run -p 5555:80 bestflow`
-`curl http://localhost:5555/api/v1/BestFlow?quantity=1&orderType=Buy`s
+`curl http://localhost:5555/api/v1/BestFlow?quantity=1&orderType=Buy`
+
